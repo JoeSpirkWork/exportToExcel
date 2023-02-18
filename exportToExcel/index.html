@@ -1,0 +1,88 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+
+    <link rel="stylesheet" type="text/css" href="stylesheet.css" media="screen">
+
+    <title>Getting Started</title>
+</head>
+
+<body>
+    <div class="container">
+        <div id="header">
+            <h1>Getting Started</h1>
+            <h2>Bentley MicroStation SDK</h2>
+        </div>
+        <div id="main_content">
+            <div id="lpanel">
+                <h1>Template Overview</h1>
+                <p>
+                    Always start Visual studio from an <b>administrator</b> MicroStation CONNECT Edition SDK shell.
+                    <br> Simply type in <b>devenv</b> and press enter.
+                </p>
+                <h3>Build Your Project</h3>
+                <p>
+                    To build the project successfully no changes are needed to the code. Simply press <b>F7</b> or press <i>Build>Build Solution</i>. Be sure to look in the output window to verify that the build was successful.
+                </p>
+                <h3>Debug with MicroStation</h3>
+                <p>
+                    To Debug in MicroStation, press <b>F5</b> or click the <i>Local Windows Debugger/Start</i> button.
+                </p>
+                <h3>Load Your Application</h3>
+                <p>
+                    <ol>
+                        <li>To load your application in MicroStation go to the <i>Utilities>MDL Applications</i> menu, select your application, and click <b>load</b>. You can also key-in <b>mdl load PROJECTNAME</b>.</li> 
+                        <li>After you load the application, for C++ click the key-in button in the MDL Applications menu, or for C# you can key-in PROJECTNAME COMMAND to run the program.</li>
+                        <li>C++ applications can be unloaded from the MDL Applications menu, but C# applications cannot be unloaded so MicroStation must be restarted in order to edit your project.</li>
+                    </ol>
+                </p>
+                <h3>Personalization</h3>
+                <ol>
+                    <li>Change the <b>@description</b> comment to a helpful description of your method.</li>
+                    <li>Replace <b>Bentley</b> with your name and the date you last modified that function.</li>
+                </ol>
+                <h3>Insert Items</h3>
+                <p>
+                    If you want to add a new Bentley MicroStation SDK file, you can right click on the project in the Solution Explorer, select <i>Add>New Item</i> and choose the appropriate file type.
+                </p>
+
+                <div id="footer">
+                    Microstation SDK EULA is located: \..\Program Files\Bentley\MicroStationCONNECTSDK\Eula.pdf
+                </div>
+            </div>
+            <div id="rpanel">
+                <div>
+                    <h1>Online Resources</h1>
+                    <br>
+                    <ol>
+                        <li><a target="_blank" href="https://msdn.microsoft.com/en-us">MSDN documentation</a><br />Detailed documentation
+                            and API reference materials for Visual Studio.</li>
+                            <br>
+                        <li><a target="_blank" href="https://communities.bentley.com/products/programming/"> Developers and Programming Forums</a><br/>Forums that cover programming with Bentley products including APIs and SDKs.</li>
+                        <br>
+                        <li><a target="_blank" href="https://communities.bentley.com/">MicroStation Community</a><br />Find how-to
+                            tips, opinions, and advice from peers and Bentley experts.</li>
+                    </ol>
+                </div>
+                <br>
+                <h2>Best Practices</h2>
+                <ul>
+                    <li>Insert the Bentley Header into new files</li>
+                    <li>Use "//" in multi-line comments</li>
+                    <li>Avoid long functions and deeply nested code</li>
+                    <li>Do not use TABs, editors should use four spaces</li>
+                    <li>Long lines should be split at 150 columns</li>
+                    <li>Use abbreviations only where they are common and completely unambiguous</li>
+                </ul>
+                <br>
+                <br>
+                <br>
+            </div>
+        </div>
+    </div>
+</body>
+
+
+</html>

@@ -1,0 +1,75 @@
+#--------------------------------------------------------------------------------------
+#
+#     $Source: MstnExamples/WPF/WPFSample/WPFSample.mke $
+#
+#  $Copyright: (c) 2019 Bentley Systems, Incorporated. All rights reserved. $
+#
+#--------------------------------------------------------------------------------------
+
+DemoSrcDir   = $(_MakeFilePath)
+PolicyFile = MicroStationPolicy.mki
+appName    = WPFSample
+MDLMKI = $(MSMDE)mki/
+
+#--------------------------------------------------------------------------------------------------
+#  Includes
+#--------------------------------------------------------------------------------------------------
+%include $(MDLMKI)mdl.mki
+
+#%if !defined (BUILD_USING_VS2019)
+    SlnFile=$(_MakeFilePath)exportToExcel.sln
+    #UseEnvOpt=
+#%else
+    # the useenv option seems to be required in some cases in VS2019
+    #SlnFile=$(_MakeFilePath)exportToExcel.sln
+    #UseEnvOpt=-useenv
+#%endif
+
+%if $(TARGET_PROCESSOR_ARCHITECTURE)=="x64"
+    Platform = x64
+    OutSubDir = Winx64
+%else
+    Platform = x86
+    OutSubDir = Winx86
+%endif
+
+%if $(TARGET_PROCESSOR_ARCHITECTURE)=="x64"
+    OutSubDir = Winx64
+%else
+    OutSubDir = Winx86
+%endif
+
+#WPFSampleProductDir = $(OutputRootDir)Product/Mstn/MicroStation/
+always:
+    | ************************************************
+    | * SlnFile = $(SlnFile)
+    | ************************************************
+
+buildConfiguration = -property:Configuration=$(Configuration) -property:Platform=$(Platform)
+
+always:
+    | ************************************************
+    | * Processing exportToExcel ...
+    | * BuildConfiguration=$(Configuration) $(Platform)
+    | * ProductDir= $(MS)
+    | ************************************************
+
+#--------------------------------------------------------------------------------------------------
+#  Compile
+#--------------------------------------------------------------------------------------------------
+%if defined(BMAKE_DELETE_ALL_TARGETS)
+    Clean:
+        msbuild.exe "$(SlnFile)" -t:clean $(buildConfiguration)
+
+%else
+
+    %if defined (BMAKE_BUILD_ALL)
+        BuildOp = -t:rebuild
+    %else
+        BuildOp = -t:build
+    %endif
+
+    BuildOrRebuild:
+        msbuild.exe "$(SlnFile)" $(BuildOp) $(buildConfiguration)
+
+%endif

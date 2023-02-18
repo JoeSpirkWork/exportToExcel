@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<!--____________________________________________________________________________________
+
+    $Source: exportToExcel.xml $
+ 
+    $Copyright: (c) 2017 Bentley Systems, Incorporated. All rights reserved. $
+________________________________________________________________________________________-->
+
+<!--____________________________________________________________________________________
+  
+  The commands.xml contains 3 main sections. <RootKeyinTable> defines the root of 
+  the command table tree. <SubKeyinTables> defines all of the subtrees that appear 
+  in the tree. <KeyinHandlers> provides a mapping from key-in string to the 
+  method that handles the key-in.
+________________________________________________________________________________________-->
+<KeyinTree xmlns="http://www.bentley.com/schemas/1.0/MicroStation/AddIn/KeyinTree.xsd">
+  
+<!--____________________________________________________________________________________
+  
+  Define the root. The entry for the root is very similar to an entry in the
+        table of subentries. The diference is that the entry for the root is labelled
+        RootKeyinTable, but an entry for a subtable is labelled as KeyinTable.
+________________________________________________________________________________________-->
+  <RootKeyinTable ID="root">
+    <Keyword SubtableRef="exportToExcel" CommandWord="exportToExcel" >
+      <Options Required ="true"/>
+    </Keyword>
+  </RootKeyinTable>
+  
+<!--Define subtables-->
+  <SubKeyinTables>
+    <KeyinTable ID="exportToExcel">
+      <Keyword CommandWord="HelloWorld"> </Keyword>
+      <Keyword CommandWord="beginExport"> </Keyword>
+    </KeyinTable>
+  </SubKeyinTables>
+
+  <!--Define a mapping from key-in to the method that handles the key-in.-->
+  <KeyinHandlers>
+    <KeyinHandler Keyin="exportToExcel HelloWorld" Function="exportToExcel.exportToExcelClass.HelloWorld"/>
+    <KeyinHandler Keyin="exportToExcel beginExport" Function="exportToExcel.exportToExcelClass.beginExport"/>
+  </KeyinHandlers>
+</KeyinTree>
