@@ -10,6 +10,7 @@ using BDELEM = Bentley.DgnPlatformNET.Elements;
 using Microstation = Bentley.MstnPlatformNET;
 using BIM = Bentley.Interop.MicroStationDGN;
 using BGeomNet = Bentley.GeometryNET;
+using Bentley.DgnPlatform;
 
 namespace exportToExcel
 {
@@ -82,12 +83,43 @@ namespace exportToExcel
                     }
                     else if (el.ElementType == BDNET.MSElementType.ComplexShape)
                     {
-                        BDELEM.ComplexShapeElement compElement;
-                        var query = new 
+                        BGeomNet.DPoint3d centroid = new BGeomNet.DPoint3d(0,0,0);
+                        BGeomNet.DVector3d normal;
+                        double area = 0.0;
+                        string namedGroup = "";
                         
-                        compElement = app.ActiveModelReference.GetElementByID(el.ElementId) as BDELEM.ComplexShapeElement;
-                        processComplexShape(compElement);
+
+                        BDELEM.CurvePathQuery CPQ = BDELEM.CurvePathQuery.GetAsCurvePathQuery(el);
+                        if(null != CPQ)
+                        {
+                            BGeomNet.CurveVector cVec = CPQ.GetCurveVector();
+                            //check that we can extract a curve vector
+                            if(null != cVec && cVec.IsClosedPath)
+                            {
+                         
+                                if(cVec.CentroidNormalArea(out centroid, out normal, out area))
+                                {
+                                    area = area / (144000000);
+                                }
+                            }
+                        }
+                        //Gets the level name of the element
+                        int levelId = el.LevelId;
+                        string levelName;
+                        var level = _activeFile.GetLevelCache();
+                        levelName = level.GetLevel(levelId).Name;
+
+                        if (BDNET.NamedGroup.AnyGroupContains(el))
+                        {
+                            BDELEM.Element[] namedGroups = BDNET.NamedGroup.GetGroupsContaining(el);
+                            BDELEM.Element namedJawn = namedGroups[0];
+                            namedGroup = namedJawn.TypeName;
+                        }
+                        
+
+                        processComplexShapes(area, namedGroup, levelName, el.ElementId.ToString(), centroid, el.ElementType.ToString());    
                     }
+
                     else if (el.ElementType == BDNET.MSElementType.Arc)
                     {
                         BIM.ArcElement eArc;
@@ -294,9 +326,9 @@ namespace exportToExcel
         }
 
         //Process Complex Shapes
-        public void processComplexShape(BDELEM.ComplexShapeElement compElement)
+        public void processComplexShapes(double area, string namedGroup, String levelName, String elementID, BGeomNet.DPoint3d centroid, String elementType)
         {
-            object[] dataExport = new object[17];
+            object[] dataExport = new object[18];
 
             //This series of functions sets all of the parameters
             //Element type is set
@@ -319,13 +351,12 @@ namespace exportToExcel
 
             //Area
 
-            //BDNET.ElementGraphicsProcessor
-            //dataExport[8] = compElement.AsAreaFillPropertiesEdit().;
+            dataExport[8] = area.ToString();
 
-            /*Sets the Center Elements
-            dataExport[9] = compElement.Centroid().X;
-            dataExport[10] = compElement.Centroid().Y;
-            dataExport[11] = compElement.Centroid().Z;
+            //Sets the Center Elements
+            dataExport[9] = centroid.X;
+            dataExport[10] = centroid.Y;
+            dataExport[11] = centroid.Z;
 
             //will need help on the rotation angle, TExt or Cell, and Named Group
             dataExport[12] = 0;
@@ -334,15 +365,16 @@ namespace exportToExcel
 
 
             //Level
-            dataExport[15] = compElement.AsShapeElement().Level.Name;
+            dataExport[15] = levelName;
 
             //Element ID
-            dataExport[16] = compElement.ID;
+            dataExport[16] = elementID;
+
+            //NamedGroupsFunction
+            dataExport[17] = namedGroup;
 
             //once the record is created and filled in, write it to an excel file. 
             _excelFileRecord.writeToExcel(dataExport);
-
-            */
         }
 
         //Processes Arcs
