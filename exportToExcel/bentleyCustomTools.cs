@@ -86,7 +86,9 @@ namespace exportToExcel
                         BGeomNet.DPoint3d centroid = new BGeomNet.DPoint3d(0,0,0);
                         BGeomNet.DVector3d normal;
                         double area = 0.0;
-                        string namedGroup = "";
+                        BDNET.ElementId namedGroupElemID;
+                        string groupName = string.Empty;
+
                         
 
                         BDELEM.CurvePathQuery CPQ = BDELEM.CurvePathQuery.GetAsCurvePathQuery(el);
@@ -112,12 +114,21 @@ namespace exportToExcel
                         if (BDNET.NamedGroup.AnyGroupContains(el))
                         {
                             BDELEM.Element[] namedGroups = BDNET.NamedGroup.GetGroupsContaining(el);
-                            BDELEM.Element namedJawn = namedGroups[0];
-                            namedGroup = namedJawn.TypeName;
+
+                            if (namedGroups.Length > 0)
+                            {
+                                BDELEM.Element namedJawn = namedGroups[0];
+                                namedGroupElemID = namedJawn.ElementId;
+                                BDNET.NamedGroupCollection fizzleBump = new BDNET.NamedGroupCollection(_activeModel);
+                                BDNET.NamedGroup fizzleStick = fizzleBump.FindByElementId(namedGroupElemID);
+                                groupName = fizzleStick.Name;
+
+
+                            }
                         }
                         
 
-                        processComplexShapes(area, namedGroup, levelName, el.ElementId.ToString(), centroid, el.ElementType.ToString());    
+                        processComplexShapes(area, groupName, levelName, el.ElementId.ToString(), centroid, el.ElementType.ToString());    
                     }
 
                     else if (el.ElementType == BDNET.MSElementType.Arc)
